@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/hex"
-	"errors"
 	"fmt"
+	"math"
 )
 
 /*
@@ -14,7 +14,7 @@ import (
 * http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/english-letter-frequencies/
 * may be more useful and is more rich in data, trigrams etc.
 */
-var LETTER_FREQUENCY = map[byte]float64 {
+var ENGLISH_FREQUENCY = map[byte]float64 {
     'a': 0.0651738,
     'b': 0.0124248,
     'c': 0.0217339,
@@ -78,13 +78,20 @@ func xor(input, key []byte){
 
 }
 
-func calcEtaoinShrdlu(input []bytes) float64 {
+func calcEtaoinShrdlu(input []byte) float64 {
 	// https://en.wikipedia.org/wiki/Etaoin_shrdlu
-	size = len(input)
-	var score float64
-	for i := 1; i < size; i += 1;{
-		
+	// with thanks to https://github.com/Lukasa/cryptopals/blob/master/cryptopals/challenge_one/three.py
+	var total_per_letter [26]int
+	for _, b := range input {
+		if b >= 'a' && b <= 'z' {
+			total_per_letter[b-'a']++
+		}
 	}
+	coeff := float64(0)
+	for i := 0; i < 26; i++ {
+		coeff += math.Sqrt(ENGLISH_FREQUENCY[byte(i+'a')] * float64(total_per_letter[i]) / float64(len(input)))
+	}
+	return coeff
 }
 
 func single_byte_xor(input []byte) ([]byte, byte, float64){
@@ -101,7 +108,7 @@ func single_byte_xor(input []byte) ([]byte, byte, float64){
 	var key byte
 	for i := 0; i < 256; i++ {
 		tempResult := make([]byte, len(input))
-		copy(tempResult, buf)
+		copy(tempResult, input)
 		xor(tempResult, bytes.Repeat([]byte{byte(i)}, size))
 		tempScore := calcEtaoinShrdlu(tempResult)
 		if tempScore > score {
@@ -118,7 +125,8 @@ func main(){
 	hex_to_base64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
 	fixed_xor("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965")
 	cipher, _ := from_str("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
-	single_byte_xor(cipher)
+	ptext, _, _ := single_byte_xor(cipher)
+	fmt.Println(ptext)
 }
 
 
