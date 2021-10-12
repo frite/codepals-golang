@@ -80,7 +80,7 @@ func xor(input, key []byte){
 
 func calcEtaoinShrdlu(input []byte) float64 {
 	// https://en.wikipedia.org/wiki/Etaoin_shrdlu
-	// with thanks to https://github.com/Lukasa/cryptopals/blob/master/cryptopals/challenge_one/three.py
+	// Taken from https://github.com/philandstuff/cryptopals-go/blob/59b2c4790a72360389aa4b84717d314da2cbc0dd/english.go#L38
 	var total_per_letter [26]int
 	for _, b := range input {
 		if b >= 'a' && b <= 'z' {
