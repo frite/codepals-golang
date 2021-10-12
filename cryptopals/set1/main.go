@@ -52,6 +52,10 @@ func from_str(input string) ([]byte, error) {
 	return hex.DecodeString(input)
 }
 
+func str_from_bytes(input []byte) string {
+	return string(input)
+}
+
 func hex_to_base64(input string) string{
 	decodehex, _ := from_str(input)
 	enc64 := base64.StdEncoding.EncodeToString(decodehex)
@@ -126,7 +130,7 @@ func main(){
 	fixed_xor("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965")
 	cipher, _ := from_str("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
 	ptext, _, _ := single_byte_xor(cipher)
-	fmt.Println(ptext)
+	fmt.Println(str_from_bytes(ptext))
 }
 
 
