@@ -5,6 +5,17 @@ import (
 	"encoding/hex"
 )
 
+func from_str(input string) ([]byte, error) {
+	return hex.DecodeString(input)
+}
+
+func hex_to_base64(input string) string{
+	decodehex, _ := from_str(input)
+	enc64 := base64.StdEncoding.EncodeToString(decodehex)
+	return enc64
+}
+
+
 func HexToBase64(hexString string) []byte {
 	hexBytes, err := hex.DecodeString(hexString)
 	if err != nil {

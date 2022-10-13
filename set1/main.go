@@ -2,7 +2,6 @@ package set_one
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"math"
@@ -48,19 +47,8 @@ func to_hex(input []byte) string {
 	return hex.EncodeToString(input)
 }
 
-func from_str(input string) ([]byte, error) {
-	return hex.DecodeString(input)
-}
-
 func str_from_bytes(input []byte) string {
 	return string(input)
-}
-
-func hex_to_base64(input string) string{
-	decodehex, _ := from_str(input)
-	enc64 := base64.StdEncoding.EncodeToString(decodehex)
-	return enc64
-
 }
 
 func fixed_xor(param1, param2 string) []byte {
