@@ -1,4 +1,4 @@
-package main
+package set_one
 
 import (
 	"bytes"
